@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sador Vehicle Request</title>
+    <!-- Telegram WebApp SDK -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--tg-theme-bg-color, #ffffff);
+            color: var(--tg-theme-text-color, #000000);
+            padding: 20px;
+            margin: 0;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        button {
+            width: 100%;
+            background-color: #2481cc;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>🚘 የትራንስፖርት ጥያቄ ማቅረቢያ</h2>
+
+    <form id="requestForm">
+        <div class="form-group">
+            <label for="branch">🏢 የመነሻ ቦታ (Branch):</label>
+            <input type="text" id="branch" placeholder="ምሳሌ፦ HQ / Mexico" required>
+        </div>
+
+        <div class="form-group">
+            <label for="destination">📍 የመድረሻ ቦታ (Destination):</label>
+            <input type="text" id="destination" placeholder="ምሳሌ፦ Gotera Depot" required>
+        </div>
+
+        <div class="form-group">
+            <label for="time">⏰ የሚሄዱበት ሰዓት (Time):</label>
+            <input type="text" id="time" placeholder="ምሳሌ፦ 2:30 Tewat" required>
+        </div>
+
+        <div class="form-group">
+            <label for="reason">📝 የጉዞው ምክንያት (Reason):</label>
+            <textarea id="reason" rows="3" placeholder="ምሳሌ፦ Maintenance Work" required></textarea>
+        </div>
+
+        <button type="submit">ጥያቄውን ላክ (Submit)</button>
+    </form>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand(); // Mini App ሙሉ ስክሪን እንዲሆን
+
+        document.getElementById('requestForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const data = {
+                branch: document.getElementById('branch').value,
+                destination: document.getElementById('destination').value,
+                time: document.getElementById('time').value,
+                reason: document.getElementById('reason').value
+            };
+
+            // መረጃውን ወደ ቴሌግራም ቦት መላክ
+            tg.sendData(JSON.stringify(data));
+        });
+    </script>
+</body>
+</html>
