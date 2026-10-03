@@ -85,7 +85,7 @@
     </div>
 
     <script>
-        // ቴሌግራም ዌብ አፕ ማስጀመር
+         // ቴሌግራም ዌብ አፕ ማስጀመር
         const tg = window.Telegram.WebApp;
         tg.ready();
         tg.expand();
@@ -105,14 +105,10 @@
                 reason: reasonInput
             };
 
-            // መረጃውን ወደ ቴሌግራም ቦት መላክ እና አፑን መዝጋት
-            if (tg.initDataUnsafe && (tg.initDataUnsafe.user || tg.initData)) {
-                tg.sendData(JSON.stringify(data));
-            } else {
-                alert("እባክዎን ሚኒ አፑን ከቴሌግራም ቦት ይክፈቱት!");
-            }
+            // ማረጋገጫውን (Check) በማስወገድ መረጃውን በቀጥታ ወደ ቦቱ መላክ
+            tg.sendData(JSON.stringify(data));
         });
-    </script>
+        </script>
 
 </body>
 </html>
