@@ -1,7 +1,93 @@
-<script>
-        // ቴሌግራም ዌብ አፕ ሎድ መሆኑን ማረጋገጥ
-        window.Telegram.WebApp.ready();
+<!DOCTYPE html>
+<html lang="am">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sador Vehicle Request</title>
+    <!-- የቴሌግራም ዌብ አፕ ኦፊሻል ስክሪፕት -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #2c3e50;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            background-color: #27ae60;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #219653;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>🚗 የትራንስፖርት ጥያቄ</h2>
+        <form id="requestForm">
+            <div class="form-group">
+                <label for="branch">መነሻ (Branch):</label>
+                <input type="text" id="branch" required placeholder="የመነሻ ቦታ ያስገቡ">
+            </div>
+
+            <div class="form-group">
+                <label for="destination">መድረሻ (Destination):</label>
+                <input type="text" id="destination" required placeholder="የመድረሻ ቦታ ያስገቡ">
+            </div>
+
+            <div class="form-group">
+                <label for="time">ሰዓት (Time):</label>
+                <input type="text" id="time" required placeholder="ለምሳሌ: 3:00 ሰዓት">
+            </div>
+
+            <div class="form-group">
+                <label for="reason">ምክንያት (Reason):</label>
+                <textarea id="reason" rows="3" required placeholder="የጉዞውን ምክንያት ያስገቡ"></textarea>
+            </div>
+
+            <button type="submit">ጥያቄ ላክ (Submit)</button>
+        </form>
+    </div>
+
+    <script>
+        // ቴሌግራም ዌብ አፕ ማስጀመር
         const tg = window.Telegram.WebApp;
+        tg.ready();
         tg.expand();
 
         document.getElementById('requestForm').addEventListener('submit', function(e) {
@@ -19,12 +105,14 @@
                 reason: reasonInput
             };
 
-            // መረጃውን ወደ ቴሌግራም ቦት መላክ
-            tg.sendData(JSON.stringify(data));
-            
-            // አፑን በራሱ መዝጋት
-            setTimeout(function() {
-                tg.close();
-            }, 100);
+            // መረጃውን ወደ ቴሌግራም ቦት መላክ እና አፑን መዝጋት
+            if (tg.initDataUnsafe && (tg.initDataUnsafe.user || tg.initData)) {
+                tg.sendData(JSON.stringify(data));
+            } else {
+                alert("እባክዎን ሚኒ አፑን ከቴሌግራም ቦት ይክፈቱት!");
+            }
         });
     </script>
+
+</body>
+</html>
