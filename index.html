@@ -19,17 +19,17 @@
             margin-bottom: 25px;
         }
         .logo {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    object-fit: contain; /* ወይም cover በማድረግ መሞከር ይቻላል */
-    background-color: #ffffff; /* ፎቶው ግልጽ (Transparent) ከሆነ የጀርባ ቀለም እንዲኖረው */
-    margin-bottom: 8px;
-    border: 2px solid #2481cc;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-}
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: contain;
+            background-color: #ffffff;
+            margin-bottom: 8px;
+            border: 2px solid #2481cc;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
         .header h2 {
             margin: 0;
             font-size: 20px;
@@ -117,10 +117,9 @@
                 destination: document.getElementById('destination').value,
                 time: document.getElementById('time').value,
                 reason: document.getElementById('reason').value
-                };
-           <img src="https://i.ibb.co/6y4g8s6/sador-logo.jpg" alt="Sador Logo" class="logo">
-            
+            };
 
+            // መረጃውን ወደ ቴሌግራም ቦት መላክ
             tg.sendData(JSON.stringify(data));
         });
     </script>
