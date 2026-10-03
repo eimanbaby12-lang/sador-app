@@ -6,59 +6,119 @@
     <title>Sador Vehicle Request</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f4f9; padding: 20px; color: #333; }
-        .container { max-width: 400px; margin: 0 auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        * { box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            padding: 20px;
+            color: #333;
+            margin: 0;
+        }
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
         h2 { text-align: center; color: #2c3e50; }
         .form-group { margin-bottom: 15px; }
         label { display: block; margin-bottom: 5px; font-weight: bold; }
-        input, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-        button { width: 100%; background-color: #27ae60; color: white; padding: 12px; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font: inherit;
+        }
+        button {
+            width: 100%;
+            background-color: #27ae60;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:disabled { opacity: 0.65; cursor: wait; }
+        #status { margin-top: 12px; text-align: center; font-size: 14px; }
     </style>
 </head>
 <body>
-
     <div class="container">
         <h2>🚗 የትራንስፖርት ጥያቄ</h2>
         <form id="requestForm">
             <div class="form-group">
                 <label for="branch">መነሻ (Branch):</label>
-                <input type="text" id="branch" required>
+                <input type="text" id="branch" name="branch" required placeholder="የመነሻ ቦታ ያስገቡ">
             </div>
             <div class="form-group">
                 <label for="destination">መድረሻ (Destination):</label>
-                <input type="text" id="destination" required>
+                <input type="text" id="destination" name="destination" required placeholder="የመድረሻ ቦታ ያስገቡ">
             </div>
             <div class="form-group">
                 <label for="time">ሰዓት (Time):</label>
-                <input type="text" id="time" required>
+                <input type="text" id="time" name="time" required placeholder="የሚሄዱበትን ሰዓት ያስገቡ">
             </div>
             <div class="form-group">
                 <label for="reason">ምክንያት (Reason):</label>
-                <textarea id="reason" rows="3" required></textarea>
+                <textarea id="reason" name="reason" rows="3" required placeholder="የጉዞውን ምክንያት ያስገቡ"></textarea>
             </div>
-            <button type="submit">ጥያቄ ላክ (Submit)</button>
+            <button id="submitBtn" type="submit">ጥያቄ ላክ (Submit)</button>
+            <div id="status" role="status" aria-live="polite"></div>
         </form>
     </div>
 
     <script>
-        const tg = window.Telegram.WebApp;
-        tg.expand();
+        const tg = window.Telegram && window.Telegram.WebApp;
+        const form = document.getElementById('requestForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const statusBox = document.getElementById('status');
 
-        document.getElementById('requestForm').addEventListener('submit', function(e) {
-            e.preventDefault();
+        if (tg) {
+            tg.ready();
+            tg.expand();
+        } else {
+            statusBox.textContent = 'እባክዎ Mini App-ን ከTelegram ውስጥ ይክፈቱ።';
+        }
+
+        form.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            if (!tg || typeof tg.sendData !== 'function') {
+                statusBox.textContent = 'Telegram ግንኙነት አልተገኘም። ከTelegram Bot ውስጥ እንደገና ይክፈቱ።';
+                return;
+            }
 
             const data = {
-                branch: document.getElementById('branch').value,
-                destination: document.getElementById('destination').value,
-                time: document.getElementById('time').value,
-                reason: document.getElementById('reason').value
+                branch: document.getElementById('branch').value.trim(),
+                destination: document.getElementById('destination').value.trim(),
+                time: document.getElementById('time').value.trim(),
+                reason: document.getElementById('reason').value.trim()
             };
 
-            // ምንም አይነት ሌላ ኮድ ሳያስፈልግ ቀጥታ መላክና መዝጋት
-            tg.sendData(JSON.stringify(data));
-            tg.close();
+            if (!data.branch || !data.destination || !data.time || !data.reason) {
+                statusBox.textContent = 'እባክዎ ሁሉንም ቦታዎች ይሙሉ።';
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'በመላክ ላይ...';
+            statusBox.textContent = 'ጥያቄው ወደ Telegram በመላክ ላይ ነው...';
+
+            try {
+                // sendData sends a web_app_data update to the bot and closes the Mini App.
+                // Do not call tg.close() immediately after this.
+                tg.sendData(JSON.stringify(data));
+            } catch (error) {
+                console.error('Mini App sendData error:', error);
+                statusBox.textContent = 'መላክ አልተሳካም። እባክዎ እንደገና ይሞክሩ።';
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'ጥያቄ ላክ (Submit)';
+            }
         });
     </script>
-
 </body>
 </html>
