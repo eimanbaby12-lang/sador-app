@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sador Vehicle Request</title>
+    <title>Sador Fleet Management</title>
     <!-- Telegram WebApp SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
@@ -14,6 +14,28 @@
             padding: 20px;
             margin: 0;
         }
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .logo {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 8px;
+            border: 2px solid #2481cc;
+        }
+        .header h2 {
+            margin: 0;
+            font-size: 20px;
+            color: var(--tg-theme-text-color, #000000);
+        }
+        .header p {
+            margin: 5px 0 0 0;
+            font-size: 13px;
+            color: gray;
+        }
         .form-group {
             margin-bottom: 15px;
         }
@@ -21,6 +43,7 @@
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
+            font-size: 14px;
         }
         input, select, textarea {
             width: 100%;
@@ -29,6 +52,8 @@
             border-radius: 8px;
             box-sizing: border-box;
             font-size: 14px;
+            background-color: var(--tg-theme-secondary-bg-color, #f5f5f5);
+            color: var(--tg-theme-text-color, #000000);
         }
         button {
             width: 100%;
@@ -46,7 +71,11 @@
 </head>
 <body>
 
-    <h2>🚘 የትራንስፖርት ጥያቄ ማቅረቢያ</h2>
+    <div class="header">
+        <img src="https://cdn-icons-png.flaticon.com/512/741/741407.png" alt="Sador Logo" class="logo">
+        <h2>Sador Fleet Management</h2>
+        <p>የተሽከርካሪ ጥያቄ ማቅረቢያ ፎርም</p>
+    </div>
 
     <form id="requestForm">
         <div class="form-group">
@@ -74,7 +103,7 @@
 
     <script>
         const tg = window.Telegram.WebApp;
-        tg.expand(); // Mini App ሙሉ ስክሪን እንዲሆን
+        tg.expand();
 
         document.getElementById('requestForm').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -86,7 +115,6 @@
                 reason: document.getElementById('reason').value
             };
 
-            // መረጃውን ወደ ቴሌግራም ቦት መላክ
             tg.sendData(JSON.stringify(data));
         });
     </script>
